@@ -163,13 +163,13 @@
                                 <div class="aa-cartbox-summary">
                                     <ul>
                                     @foreach ($categories as $category)
-                                    @foreach($category -> products as $product)
+                                    @foreach($category->products as $product)
                                         <li>
                                             <a class="aa-cartbox-img" href="#"><img src="{{ asset('img/' . $category->name . '/' . $product->img_name) }}"
                                                     alt="" /></a>
                                             <div class="aa-cartbox-info">
-                                                <h4><a href="#">{{$product -> products_name}}</a></h4>
-                                                <p>1 x {{$product -> products_price}}</p>
+                                                <h4><a href="#">{{$product->products_name}}</a></h4>
+                                                <p>1 x {{$product->products_price}}</p>
                                             </div>
                                             <a class="aa-remove-product" href="#"><span
                                                     class="fa fa-times"></span></a>
