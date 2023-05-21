@@ -20,12 +20,6 @@ class CustomAuthController extends Controller
         return view('auth.login');
     }
 
-    public function getUserById($id)
-    {
-        $users = User::where('id', $id)->first();
-        return view('trangchitiet', compact('users'));
-        // return redirect("login")->withSuccess('Login details are not valid');
-    }
     public function customLogin(Request $request)
     {
         $request->validate([
@@ -35,7 +29,7 @@ class CustomAuthController extends Controller
 
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            return redirect()->intended('index ')
+            return redirect()->intended('/ ')
                 ->withSuccess('Signed in');
         }
 
@@ -52,7 +46,8 @@ class CustomAuthController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
+            'password' => 'required|confirmed|min:6'],[
+                'password.confirmed' => 'The password confirmation does not match.',
         ]);
 
         // Tạo user mới và lưu vào CSDL
@@ -73,16 +68,6 @@ class CustomAuthController extends Controller
             'password' => Hash::make($data['password'])
         ]);
     }
-
-    // public function dashboard()
-    // {
-    //     if (Auth::check()) {
-    //         return view('dashboard');
-    //     }
-
-    //     return redirect("login")->withSuccess('You are not allowed to access');
-    // }
-
     public function signOut()
     {
         Session::flush();
