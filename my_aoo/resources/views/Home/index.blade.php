@@ -120,10 +120,17 @@
                                     <li class="hidden-xs">
                                         <a href="{{ route('checkout') }}">Checkout</a>
                                     </li>
-                                    <li>
-                                        <a href="" data-toggle="modal"
-                                            data-target="#login-modal">Login</a>
-                                    </li>
+                                    @if (is_null(Auth::id()))
+                                        <li>
+                                            <a href="" data-toggle="modal" data-target="#login-modal">Login</a>
+                                        </li>
+                                    @endif
+                                    @if (!is_null(Auth::id()))
+                                        <li>
+                                            <a href="{{ route('signout') }}" data-toggle="modal"
+                                                data-target="#login-modal">logout</a>
+                                        </li>
+                                    @endif
                                 </ul>
                             </div>
                         </div>
@@ -162,20 +169,21 @@
                                 </a>
                                 <div class="aa-cartbox-summary">
                                     <ul>
-                                    @foreach ($categories as $category)
-                                    @foreach($category -> products as $product)
-                                        <li>
-                                            <a class="aa-cartbox-img" href="#"><img src="{{ asset('img/' . $category->name . '/' . $product->img_name) }}"
-                                                    alt="" /></a>
-                                            <div class="aa-cartbox-info">
-                                                <h4><a href="#">{{$product -> products_name}}</a></h4>
-                                                <p>1 x {{$product -> products_price}}</p>
-                                            </div>
-                                            <a class="aa-remove-product" href="#"><span
-                                                    class="fa fa-times"></span></a>
-                                        </li>
-                                       @endforeach
-                                       @endforeach
+                                        @foreach ($categories as $category)
+                                            @foreach ($category->products as $product)
+                                                <li>
+                                                    <a class="aa-cartbox-img" href="#"><img
+                                                            src="{{ asset('img/' . $category->name . '/' . $product->img_name) }}"
+                                                            alt="" /></a>
+                                                    <div class="aa-cartbox-info">
+                                                        <h4><a href="#">{{ $product->products_name }}</a></h4>
+                                                        <p>1 x {{ $product->products_price }}</p>
+                                                    </div>
+                                                    <a class="aa-remove-product" href="#"><span
+                                                            class="fa fa-times"></span></a>
+                                                </li>
+                                            @endforeach
+                                        @endforeach
                                     </ul>
                                     <a class="aa-cartbox-checkout aa-primary-btn"
                                         href="{{ route('checkout') }}">Checkout</a>
@@ -223,10 +231,7 @@
                             <li>
                                 <a href="#">Men <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#">Casual</a></li>
                                     <li><a href="#">Sports</a></li>
-                                    <li><a href="#">Formal</a></li>
-                                    <li><a href="#">Standard</a></li>
                                     <li><a href="#">T-Shirts</a></li>
                                     <li><a href="#">Shirts</a></li>
                                     <li><a href="#">Jeans</a></li>
@@ -237,10 +242,8 @@
                                 <ul class="dropdown-menu">
                                     <li><a href="#">Kurta & Kurti</a></li>
                                     <li><a href="#">Trousers</a></li>
-                                    <li><a href="#">Casual</a></li>
                                     <li><a href="#">Sports</a></li>
                                     <li><a href="#">Formal</a></li>
-                                    <li><a href="#">Sarees</a></li>
                                     <li><a href="#">Shoes</a></li>
                                 </ul>
                             </li>
@@ -466,9 +469,10 @@
                                                                     alt="{{ $product->products_name }}">
                                                             </a>
                                                             <form action="cart" method="post">
-                                                            <a class="aa-add-card-btn" href="#">
-                                                                <span class="fa fa-shopping-cart"></span>Add To Cart
-                                                            </a>
+                                                                <a class="aa-add-card-btn" href="#">
+                                                                    <span class="fa fa-shopping-cart"></span>Add To
+                                                                    Cart
+                                                                </a>
                                                             </form>
                                                             <figcaption>
                                                                 <h4 class="aa-product-title">
@@ -655,11 +659,11 @@
                                             <figure>
                                                 <a class="aa-product-img" href="#"><img
                                                         src="img/man/polo-shirt-2.png" alt="polo shirt img" /></a>
-                                                        <form action="/" method="post">
-                                                <a class="aa-add-card-btn" href="#"><span
-                                                        class="fa fa-shopping-cart"></span>Add To
-                                                    Cart</a>
-                                                    </form>
+                                                <form action="/" method="post">
+                                                    <a class="aa-add-card-btn" href="#"><span
+                                                            class="fa fa-shopping-cart"></span>Add To
+                                                        Cart</a>
+                                                </form>
                                                 <figcaption>
                                                     <h4 class="aa-product-title">
                                                         <a href="#">Polo T-Shirt</a>
@@ -1753,7 +1757,7 @@
         </div>
     </footer>
     <!-- / footer -->
-@extends('auth.login')
+    @extends('auth.login')
 
 
     <!-- jQuery library -->
