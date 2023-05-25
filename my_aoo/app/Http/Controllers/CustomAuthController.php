@@ -20,12 +20,6 @@ class CustomAuthController extends Controller
         return view('auth.login');
     }
 
-    public function getUserById($id)
-    {
-        $users = User::where('id', $id)->first();
-        return view('trangchitiet', compact('users'));
-        // return redirect("login")->withSuccess('Login details are not valid');
-    }
     public function customLogin(Request $request)
     {
         $request->validate([
@@ -35,7 +29,10 @@ class CustomAuthController extends Controller
 
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            return redirect()->intended('index ')
+             if (auth()->user()->role == '1') {
+                return redirect()->route('admin');
+            }
+            return redirect()->intended('/')
                 ->withSuccess('Signed in');
         }
 
@@ -47,13 +44,26 @@ class CustomAuthController extends Controller
         return view('auth.registration');
     }
 
+
+    public function AddUser(Request $request)
+    {
+        return view('Admin/AddUser');
+    }
+
+    public function AddProduct(Request $request)
+    {
+        return view('Admin/AddProduct');
+    }
+
     public function customRegistration(Request $request)
     {
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-        ]);
+            'password' => 'required|confirmed|min:6'
+        ], [
+                'password.confirmed' => 'The password confirmation does not match.',
+            ]);
 
         // Tạo user mới và lưu vào CSDL
         $user = new User;
@@ -64,6 +74,88 @@ class CustomAuthController extends Controller
 
         return redirect("account")->withSuccess('You have signed-in');
     }
+    public function RegisterUsersAdmin(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|confirmed|min:6'
+        ], [
+                'password.confirmed' => 'The password confirmation does not match.',
+            ]);
+
+        // Tạo user mới và lưu vào CSDL
+        $user = new User;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return redirect("index6")->withSuccess('You have signed-in');
+    }
+
+
+    public function RegisterProductsAdmin(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'price' => 'required',
+            'image' => 'required',
+            'description' => 'required',
+            // 'categorys' => 'required',
+        ]);
+        $file = $request->file("image");
+        //Lấy Tên files
+        /**
+         * $destination_path = 'public/images/users';
+         * php artisan storage:link => storage/images/user
+         */
+        $fileImage = $file->getClientOriginalName();
+        $file -> move("img/Sport", $fileImage);
+        $data = $request->all();
+        $data['image'] = $fileImage;
+        $check = $this->createProduct($data);
+
+        return redirect("index7")->withSuccess('You have signed-in');
+    }
+
+    public function createProduct(array $data)
+    {
+        return Products::create([
+            'products_name' => $data['name'],
+            'products_price' => $data['price'],
+            'image' => $data['image'],
+            'description' => $data['description'],
+            // 'categorys' => $data['categorys']
+        ]);
+    }
+
+
+
+
+
+
+
+
+
+
+
+    
+    public function DeleteUser(Request $request)
+    {
+        User::where('id', $request->deleteID)->delete();
+
+        return redirect("index6")->withSuccess('You have signed-in');
+    }
+
+    public function DeleteProduct(Request $request)
+    {
+        Products::where('id', $request->deleteIDProduct)->delete();
+
+        return redirect("index7")->withSuccess('You have signed-in');
+    }
+
+
 
     public function create(array $data)
     {
@@ -73,16 +165,6 @@ class CustomAuthController extends Controller
             'password' => Hash::make($data['password'])
         ]);
     }
-
-    // public function dashboard()
-    // {
-    //     if (Auth::check()) {
-    //         return view('dashboard');
-    //     }
-
-    //     return redirect("login")->withSuccess('You are not allowed to access');
-    // }
-
     public function signOut()
     {
         Session::flush();
@@ -122,14 +204,20 @@ class CustomAuthController extends Controller
     {
         return view('contact');
     }
-    public function indexUser()
+
+    // Hien thi san pham theo danh muc
+    public function indexUserCustomer()
     {
-        $categories = Categorys::with(['products' => function ($query) {
-            $query->join('products_image', 'products.id', '=', 'products_image.products_id')
-                  ->select('products.*', 'products_image.img_name');
-        }])->get();
-        return view('index', compact('categories'));
+        $categories = Categorys::with([
+            'products' => function ($query) {
+                $query->join('products_image', 'products.id', '=', 'products_image.products_id')
+                    ->select('products.*', 'products_image.img_name');
+            }
+        ])->get();
+
+        return view('home.index', compact('categories'));
     }
+
 
     public function product_detail()
     {
@@ -143,13 +231,26 @@ class CustomAuthController extends Controller
     {
         return view('wishlist');
     }
-     public function index5(){
-        return view('index5');
-     }
-     public function index6(){
-        return view('index6');
-     }
-     public function index7(){
-        return view('index7');
-     }
+    public function index5()
+    {
+        return view('admin.index5');
+    }
+    public function index6()
+    {
+        $users = User::all();
+
+        return view('admin.index6',compact('users'));
+    }
+    public function index7()
+    {
+        $categories = Categorys::with([
+            'products' => function ($query) {
+                $query->join('products_image', 'products.id', '=', 'products_image.products_id')
+                    ->select('products.*', 'products_image.img_name');
+            }
+        ])->get();
+        
+    //    $products = Products::all();
+        return view('admin.index7', compact('categories') );
+    }
 }
