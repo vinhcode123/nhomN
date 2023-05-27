@@ -21,10 +21,11 @@ return new class extends Migration {
 
             $table->timestamps();
         });
-        Schema::table('products', function ($table) {
-            $table->renameColumn('id_caterory', 'categorys_id');
-        });
+        // Schema::table('products', function ($table) {
+        //     $table->renameColumn('id_caterory', 'categorys_id');
+        // });
     }
+    
 
     /**
      * Reverse the migrations.

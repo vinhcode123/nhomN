@@ -221,19 +221,19 @@
               <li class="nav-item">
                 <a href="index5" class="nav-link active">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Dashboard v1</p>
+                  <p>Main DisPlay</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="index6" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Dashboard v2</p>
+                  <p>Users</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="index7" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Dashboard v3</p>
+                  <p>Products</p>
                 </a>
               </li>
             </ul>

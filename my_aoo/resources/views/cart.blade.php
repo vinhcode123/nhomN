@@ -297,7 +297,10 @@
                         <td><a class="remove" href="#"><fa class="fa fa-close"></fa></a></td>
                         <td><a href="#"><img src="img/Men/polo-shirt-1.png" alt="img"></a></td>
                         <td><a class="aa-cart-title" href="#">Polo T-Shirt</a></td>
-                      
+                        <td>$150</td>
+                        <td><input class="aa-cart-quantity" type="number" value="1"></td>
+                        <td>$150</td>
+
                       </tr>
                       <tr>
                         <td><a class="remove" href="#"><fa class="fa fa-close"></fa></a></td>
